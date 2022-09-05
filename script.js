@@ -1,12 +1,70 @@
 'use strict';
 
-const year = 2022;
-const month = 9;
-
 window.onload = function () {
-    const data = generateMonthCalendar(year, month);
-    document.getElementById('calendar').appendChild(data);
+    const current = new Date();
+    const year = current.getFullYear();
+    const month = current.getMonth() + 1;
+
+    // カレンダーの表示
+    const wrapper = document.getElementById('calendar');
+    addCalendar(wrapper, year, month);
     // console.log(getMonthCalendar(2022, 9));
+}
+
+function addCalendar(wrapper, year, month) {
+    // 現在カレンダーが追加されている場合は一旦削除する
+    wrapper.textContent = null;
+
+    // カレンダーに表示する内容を取得
+    const headData = generateCalendarHeader(wrapper, year, month);
+    const bodyData = generateMonthCalendar(year, month);
+
+    // カレンダーの要素を追加
+    wrapper.appendChild(headData);
+    wrapper.appendChild(bodyData);
+}
+
+function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘッダーを作成、月の移動の機能
+    //　前月と翌月を取得
+    const nextMonth = new Date(year, (month - 1)); //与えられた月（month）は1~12月まであるが、コンピュータが処理できる月は0~11の範囲である。よって-1している。
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    const prevMonth = new Date(year, (month - 1));
+    prevMonth.setMonth(prevMonth.getMonth() - 1);
+
+    //　ヘッダー要素
+    const cHeadar = document.createElement('div');
+    cHeadar.className = 'calendar-header';
+
+    // 見出しの追加
+    const cTitle = document.createElement('div');
+    cTitle.className = 'calendar-header_title';
+    const cTitleText = document.createTextNode(year + '年' + month + '月');
+    cTitle.appendChild(cTitleText);
+    cHeadar.appendChild(cTitle);
+
+    // 前月ボタンの追加
+    let cPrev = document.createElement('button');
+    cPrev.className = 'calendar-header_prev';
+    const cPrevText = document.createTextNode('prev');
+    cPrev.appendChild(cPrevText);
+    // 前月ボタンをクリックした時のイベント設定
+    cPrev.addEventListener('click', function(){
+        addCalendar(wrapper, prevMonth.getFullYear(), (prevMonth.getMonth() + 1));
+    }, false);
+    cHeadar.appendChild(cPrev);
+
+    // 翌月ボタンの追加
+    const cNext = document.createElement('button');
+    cNext.className = 'calendar-header_next';
+    const cNextText = document.createTextNode('next');
+    cNext.appendChild(cNextText);
+    // 翌月ボタンをクリックした時のイベント設定
+    cNext.addEventListener('click', function(){
+        addCalendar(wrapper, nextMonth.getFullYear(), (nextMonth.getMonth() + 1));
+    }, false);
+    cHeadar.appendChild(cNext);
+
+    return cHeadar;
 }
 
 function generateMonthCalendar(year, month) { // 指定した月のカレンダーの形を生成
@@ -14,7 +72,7 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
     //カレンダーの情報を取得
     const calendarData = getMonthCalendar(year, month);
 
-    var i = calendarData[0]['weekday']; // 初日の曜日を取得
+    var i = calendarData[0] ['weekday']; // 初日の曜日を取得
     // カレンダー上の初日より前を埋める
     while (i > 0) {
         i--;
@@ -52,13 +110,13 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
     //　日付部分の生成
     insertData += '<tbody>';
     for(let i = 0; i < calendarData.length; i++){
-        if(calendarData[i]['weekday'] <= 0){
+        if (calendarData[i].weekday <= 0){
             insertData += '<tr>';
         }
         insertData += '<td>';
         insertData += calendarData[i]['day'];
         insertData += '</td>';
-        if(calendarData[i]['weekday'] >= 6){
+        if (calendarData[i]['weekday'] >= 6){
             insertData += '</tr>';
         }
     }
