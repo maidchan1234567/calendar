@@ -1,0 +1,19 @@
+#calendar{
+    font-size: 350%;
+}
+
+.calendar-header{
+}
+
+.calendar-header_next{
+    background-color: white;
+    border: none;
+}
+
+.move_next {
+    color: white;
+}
+
+.calendar-table{
+    margin: 0 auto;
+}

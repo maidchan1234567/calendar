@@ -48,7 +48,7 @@ function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘ�
     const cPrevText = document.createTextNode('prev');
     cPrev.appendChild(cPrevText);
     // 前月ボタンをクリックした時のイベント設定
-    cPrev.addEventListener('click', function(){
+    cPrev.addEventListener('click', function () {
         addCalendar(wrapper, prevMonth.getFullYear(), (prevMonth.getMonth() + 1));
     }, false);
     cHeadar.appendChild(cPrev);
@@ -56,13 +56,22 @@ function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘ�
     // 翌月ボタンの追加
     const cNext = document.createElement('button');
     cNext.className = 'calendar-header_next';
-    const cNextText = document.createTextNode('next');
-    cNext.appendChild(cNextText);
+    const page_move_next = document.createElement('img');
+    page_move_next.id = 'move_next';
+    page_move_next.src = "image/page_move.png";
+    cNext.insertAdjacentElement('beforeend', page_move_next);
+    // const cNextText = document.createTextNode('next');
+    // cNext.appendChild(cNextText); 
+
     // 翌月ボタンをクリックした時のイベント設定
-    cNext.addEventListener('click', function(){
+    cNext.addEventListener('click', function () {
         addCalendar(wrapper, nextMonth.getFullYear(), (nextMonth.getMonth() + 1));
     }, false);
-    cHeadar.appendChild(cNext);
+    cHeadar.insertAdjacentElement("beforeend", cNext);
+
+    // 横線の追加
+    const horizontal_line = document.createElement('hr');
+    cHeadar.insertAdjacentElement("beforeend", horizontal_line);
 
     return cHeadar;
 }
@@ -71,8 +80,9 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
     const weekdayData = ['日', '月', '火', '水', '木', '金', '土'];
     //カレンダーの情報を取得
     const calendarData = getMonthCalendar(year, month);
+    const cMain = document.createElement('div');
 
-    var i = calendarData[0] ['weekday']; // 初日の曜日を取得
+    var i = calendarData[0]['weekday']; // 初日の曜日を取得
     // カレンダー上の初日より前を埋める
     while (i > 0) {
         i--;
@@ -93,6 +103,7 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
 
     //　カレンダーの要素を生成
     const cTable = document.createElement('table');
+    cMain.insertAdjacentElement('beforeend', cTable)
     cTable.className = 'calendar-table';
 
     let insertData = '';
@@ -109,21 +120,21 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
 
     //　日付部分の生成
     insertData += '<tbody>';
-    for(let i = 0; i < calendarData.length; i++){
-        if (calendarData[i].weekday <= 0){
+    for (let i = 0; i < calendarData.length; i++) {
+        if (calendarData[i].weekday <= 0) {
             insertData += '<tr>';
         }
         insertData += '<td>';
         insertData += calendarData[i]['day'];
         insertData += '</td>';
-        if (calendarData[i]['weekday'] >= 6){
+        if (calendarData[i]['weekday'] >= 6) {
             insertData += '</tr>';
         }
     }
     insertData += '</tbody>';
 
     cTable.innerHTML += insertData;
-    return cTable;
+    return cMain;
 }
 
 function getMonthCalendar(year, month) { //指定した月の日付と曜日を配列で返す
