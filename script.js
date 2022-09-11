@@ -16,21 +16,15 @@ function addCalendar(wrapper, year, month) {
     wrapper.textContent = null;
 
     // カレンダーに表示する内容を取得
-    const headData = generateCalendarHeader(wrapper, year, month);
-    const bodyData = generateMonthCalendar(year, month);
+    const headData = generateCalendarHeader(year, month);
+    const bodyData = generateMonthCalendar(wrapper, year, month);
 
     // カレンダーの要素を追加
     wrapper.appendChild(headData);
     wrapper.appendChild(bodyData);
 }
 
-function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘッダーを作成、月の移動の機能
-    //　前月と翌月を取得
-    const nextMonth = new Date(year, (month - 1)); //与えられた月（month）は1~12月まであるが、コンピュータが処理できる月は0~11の範囲である。よって-1している。
-    nextMonth.setMonth(nextMonth.getMonth() + 1);
-    const prevMonth = new Date(year, (month - 1));
-    prevMonth.setMonth(prevMonth.getMonth() - 1);
-
+function generateCalendarHeader(year, month) { //カレンダーのヘッダーを作成、月の移動の機能
     //　ヘッダー要素
     const cHeadar = document.createElement('div');
     cHeadar.className = 'calendar-header';
@@ -42,33 +36,6 @@ function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘ�
     cTitle.appendChild(cTitleText);
     cHeadar.appendChild(cTitle);
 
-    // 前月ボタンの追加
-    let cPrev = document.createElement('button');
-    cPrev.className = 'calendar-header_prev';
-    const cPrevText = document.createTextNode('prev');
-    cPrev.appendChild(cPrevText);
-    // 前月ボタンをクリックした時のイベント設定
-    cPrev.addEventListener('click', function () {
-        addCalendar(wrapper, prevMonth.getFullYear(), (prevMonth.getMonth() + 1));
-    }, false);
-    cHeadar.appendChild(cPrev);
-
-    // 翌月ボタンの追加
-    const cNext = document.createElement('button');
-    cNext.className = 'calendar-header_next';
-    const page_move_next = document.createElement('img');
-    page_move_next.id = 'move_next';
-    page_move_next.src = "image/page_move.png";
-    cNext.insertAdjacentElement('beforeend', page_move_next);
-    // const cNextText = document.createTextNode('next');
-    // cNext.appendChild(cNextText); 
-
-    // 翌月ボタンをクリックした時のイベント設定
-    cNext.addEventListener('click', function () {
-        addCalendar(wrapper, nextMonth.getFullYear(), (nextMonth.getMonth() + 1));
-    }, false);
-    cHeadar.insertAdjacentElement("beforeend", cNext);
-
     // 横線の追加
     const horizontal_line = document.createElement('hr');
     cHeadar.insertAdjacentElement("beforeend", horizontal_line);
@@ -76,11 +43,12 @@ function generateCalendarHeader(wrapper, year, month) { //カレンダーのヘ�
     return cHeadar;
 }
 
-function generateMonthCalendar(year, month) { // 指定した月のカレンダーの形を生成
+function generateMonthCalendar(wrapper, year, month) { // 指定した月のカレンダーの形を生成
     const weekdayData = ['日', '月', '火', '水', '木', '金', '土'];
     //カレンダーの情報を取得
     const calendarData = getMonthCalendar(year, month);
     const cMain = document.createElement('div');
+    cMain.id = 'cMain';
 
     var i = calendarData[0]['weekday']; // 初日の曜日を取得
     // カレンダー上の初日より前を埋める
@@ -134,6 +102,42 @@ function generateMonthCalendar(year, month) { // 指定した月のカレンダ�
     insertData += '</tbody>';
 
     cTable.innerHTML += insertData;
+
+    //　前月と翌月を取得
+    const nextMonth = new Date(year, (month - 1)); //与えられた月（month）は1~12月まであるが、コンピュータが処理できる月は0~11の範囲である。よって-1している。
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    const prevMonth = new Date(year, (month - 1));
+    prevMonth.setMonth(prevMonth.getMonth() - 1);
+
+    // 前月ボタンの追加
+    let cPrev = document.createElement('button');
+    cPrev.className = 'calendar-header_prev'
+    const page_move_prev = document.createElement('img');
+    page_move_prev.id = 'move_prev';
+    page_move_prev.src = "image/page_move.png";
+    cPrev.appendChild(page_move_prev);
+    // 前月ボタンをクリックした時のイベント設定
+    cPrev.addEventListener('click', function () {
+        addCalendar(wrapper, prevMonth.getFullYear(), (prevMonth.getMonth() + 1));
+    }, false);
+    cMain.appendChild(cPrev);
+
+    // 翌月ボタンの追加
+    const cNext = document.createElement('button');
+    cNext.className = 'calendar-header_next';
+    const page_move_next = document.createElement('img');
+    page_move_next.id = 'move_next';
+    page_move_next.src = "image/page_move.png";
+    cNext.insertAdjacentElement('beforeend', page_move_next);
+    // const cNextText = document.createTextNode('next');
+    // cNext.appendChild(cNextText); 
+
+    // 翌月ボタンをクリックした時のイベント設定
+    cNext.addEventListener('click', function () {
+        addCalendar(wrapper, nextMonth.getFullYear(), (nextMonth.getMonth() + 1));
+    }, false);
+    cMain.insertAdjacentElement("beforeend", cNext);
+
     return cMain;
 }
 

@@ -1,19 +1,39 @@
-#calendar{
-    font-size: 350%;
+html{
+    height: 100vh;
 }
 
-.calendar-header{
+body{
+    height: 100%;
+    margin: 0;
+}
+
+#calendar{
+    font-size: 350%;
+    height: 70%;
+}
+
+#cMain {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 7%;
+    height: 100%;
+}
+
+.calendar-table{
+    height: 50%;
+    margin: 0;
+    order: 1;
+}
+
+.calendar-header_prev{
+    transform: scale(-1, 1);
+    background-color: white;
+    border: none;
+    order: 0;
 }
 
 .calendar-header_next{
     background-color: white;
     border: none;
-}
-
-.move_next {
-    color: white;
-}
-
-.calendar-table{
-    margin: 0 auto;
+    order: 2;
 }
