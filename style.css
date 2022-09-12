@@ -1,22 +1,26 @@
-html{
-    height: 100vh;
-}
-
 body{
-    height: 100%;
+    height: 100vh;
     margin: 0;
 }
 
 #calendar{
     font-size: 350%;
-    height: 70%;
+    height: 100%;
+}
+
+.calendar-header{
+}
+
+.calendar-header_title{
+    padding-top: .4em;
+    margin-left: 1em;
 }
 
 #cMain {
     display: flex;
     justify-content: space-between;
     margin-top: 7%;
-    height: 100%;
+    height: 73%;
 }
 
 .calendar-table{

@@ -1,22 +1,27 @@
 'use strict';
 
-window.onload = function () {
+recalc();
+
+function recalc() {
     const current = new Date();
     const year = current.getFullYear();
     const month = current.getMonth() + 1;
+
 
     // カレンダーの表示
     const wrapper = document.getElementById('calendar');
     addCalendar(wrapper, year, month);
     // console.log(getMonthCalendar(2022, 9));
+
+    refresh();
 }
 
 function addCalendar(wrapper, year, month) {
     // 現在カレンダーが追加されている場合は一旦削除する
-    wrapper.textContent = null;
+    wrapper.innerHTML = null;
 
     // カレンダーに表示する内容を取得
-    const headData = generateCalendarHeader(year, month);
+    const headData = generateCalendarHeader();
     const bodyData = generateMonthCalendar(wrapper, year, month);
 
     // カレンダーの要素を追加
@@ -24,7 +29,8 @@ function addCalendar(wrapper, year, month) {
     wrapper.appendChild(bodyData);
 }
 
-function generateCalendarHeader(year, month) { //カレンダーのヘッダーを作成、月の移動の機能
+function generateCalendarHeader() { //カレンダーのヘッダーを作成、月の移動の機能
+
     //　ヘッダー要素
     const cHeadar = document.createElement('div');
     cHeadar.className = 'calendar-header';
@@ -32,7 +38,8 @@ function generateCalendarHeader(year, month) { //カレンダーのヘッダー�
     // 見出しの追加
     const cTitle = document.createElement('div');
     cTitle.className = 'calendar-header_title';
-    const cTitleText = document.createTextNode(year + '年' + month + '月');
+
+    const cTitleText = document.createTextNode(todayTime());
     cTitle.appendChild(cTitleText);
     cHeadar.appendChild(cTitle);
 
@@ -43,6 +50,29 @@ function generateCalendarHeader(year, month) { //カレンダーのヘッダー�
     return cHeadar;
 }
 
+function refresh() {
+    setTimeout(recalc, 1000);
+}
+
+function todayTime() {
+    // 今日の日時を取得
+    const today = new Date();
+    const today_year = today.getFullYear();
+    const today_month = today.getMonth() + 1;
+    const today_days = today.getDate();
+    const today_weekday = today.getDay();
+    const today_hours = today.getHours();
+    const today_min = today.getMinutes();
+    const today_sec = today.getSeconds();
+
+    //曜日を文字に変換
+    const weekday_character = ['日', '月', '火', '水', '木', '金', '土'];
+
+    let today_time = ` ${today_year}年${today_month}月${today_days}日（${weekday_character[today_weekday]}）${today_hours}：${today_min}：${today_sec}`;
+
+    return today_time;
+}
+
 function generateMonthCalendar(wrapper, year, month) { // 指定した月のカレンダーの形を生成
     const weekdayData = ['日', '月', '火', '水', '木', '金', '土'];
     //カレンダーの情報を取得
@@ -50,7 +80,7 @@ function generateMonthCalendar(wrapper, year, month) { // 指定した月のカ�
     const cMain = document.createElement('div');
     cMain.id = 'cMain';
 
-    var i = calendarData[0]['weekday']; // 初日の曜日を取得
+    var i = calendarData[0].weekday; // 初日の曜日を取得
     // カレンダー上の初日より前を埋める
     while (i > 0) {
         i--;
