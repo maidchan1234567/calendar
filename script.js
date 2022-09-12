@@ -11,6 +11,7 @@ function recalc() {
     // カレンダーの表示
     const wrapper = document.getElementById('calendar');
     addCalendar(wrapper, year, month);
+    addCalendar_header(wrapper);
     // console.log(getMonthCalendar(2022, 9));
 
     refresh();
@@ -21,12 +22,15 @@ function addCalendar(wrapper, year, month) {
     wrapper.innerHTML = null;
 
     // カレンダーに表示する内容を取得
-    const headData = generateCalendarHeader();
     const bodyData = generateMonthCalendar(wrapper, year, month);
 
     // カレンダーの要素を追加
-    wrapper.appendChild(headData);
     wrapper.appendChild(bodyData);
+}
+
+function addCalendar_header(wrapper){
+    const headData = generateCalendarHeader();
+    wrapper.appendChild(headData);
 }
 
 function generateCalendarHeader() { //カレンダーのヘッダーを作成、月の移動の機能
